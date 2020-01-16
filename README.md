@@ -20,6 +20,7 @@ A software designed and made specifically for an arcade in Unity.
 ## System shortcuts
 
 * Shutdown
-  
+  * Right Joystick **Down** + All 3 left buttons pressed for **3 Seconds**
+
 * Restart
-  
+  * Right Joystick **Up** + All 3 left buttons pressed for **3 Seconds**

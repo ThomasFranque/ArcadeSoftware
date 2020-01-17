@@ -50,11 +50,8 @@ namespace ExternalSystemGames
                 }
                 else
                     textures[dummy] = null;
-
-                Debug.LogWarning($"{gi.Name} Loaded.");
                 dummy++;
             }
-
             // Instantiate buttons
             PopulateCanvas(gInfos, textures);
         }
@@ -75,6 +72,8 @@ namespace ExternalSystemGames
 
                 dummy++;
             }
+
+             Debug.LogWarning($"Successfully displaying game buttons.");
 
             DestroySelf();
         }

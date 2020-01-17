@@ -64,7 +64,9 @@ namespace ExternalSystemGames
 
 				gInf.Add(new GameInfo(dir.Name, dir.FullName, gameDescription, finalExeInf, finalPng));
 			}
+			
 
+            Debug.LogWarning($"Successfully read game files.");
 			return gInf;
 		}
 

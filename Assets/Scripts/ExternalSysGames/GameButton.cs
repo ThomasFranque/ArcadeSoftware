@@ -33,7 +33,8 @@ namespace ExternalSystemGames
         private void OnGameSelected()
         {
             // add lil animation before
-            ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
+            if (_selfGameInfo.ExeFile?.FullName != null)
+                ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace ExternalSystemGames
         private EventSystem _eventSystem;
         private ExternalGameManager _EGM;
 
+        private MainCanvas _mainCanvas;
 
         private void Awake()
         {
@@ -24,6 +25,7 @@ namespace ExternalSystemGames
 
             _EGM = new ExternalGameManager();
             _eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+            _mainCanvas = GameObject.Find("Main Canvas").GetComponent<MainCanvas>();
             StartCoroutine(LoadButtons(_EGM.GamesInfo));
         }
 
@@ -37,12 +39,17 @@ namespace ExternalSystemGames
             int dummy = 0;
             foreach (GameInfo gi in gInfos)
             {
-                string pathTemp = pathPreFix + gi.ImageFile.FullName;
-                WWW www = new WWW(pathTemp);
-                yield return www;
-                while (!www.isDone)
-                    yield return null;
-                textures[dummy] = www.texture;
+                if (gi.ImageFile != null)
+                {
+                    string pathTemp = pathPreFix + gi.ImageFile.FullName;
+                    WWW www = new WWW(pathTemp);
+                    yield return www;
+                    while (!www.isDone)
+                        yield return null;
+                    textures[dummy] = www.texture;
+                }
+                else
+                    textures[dummy] = null;
 
                 Debug.LogWarning($"{gi.Name} Loaded.");
                 dummy++;
@@ -60,7 +67,9 @@ namespace ExternalSystemGames
                 GameObject newButton =
                     Instantiate(_gameButtonPrefab, _contentsTransform);
                 newButton.GetComponent<RawImage>().texture = textures[dummy];
-                newButton.GetComponent<GameButton>().SetGameInfo(g);
+                GameButton buttonScript = newButton.GetComponent<GameButton>();
+                buttonScript.SetGameInfo(g);
+                _mainCanvas.AddGameButton(buttonScript);
 
                 if (dummy == 0) _eventSystem.SetSelectedGameObject(newButton);
 

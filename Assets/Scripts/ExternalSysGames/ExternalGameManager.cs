@@ -10,6 +10,7 @@ namespace ExternalSystemGames
 	public class ExternalGameManager
 	{
 		private const string _GAME_DIR_NAME = "games";
+		private const string _DEFAULT_DESCRIPTION = "No game description provided.\n\\[T]/";
 		private readonly string _dirPath;
 
 		public List<GameInfo> GamesInfo { get; }
@@ -22,7 +23,7 @@ namespace ExternalSystemGames
 			GamesInfo = new List<GameInfo>();
 
 			if (!SaveDirExists())
-				CreateSaveDir();
+				CreateGameDir();
 
 			GamesInfo = GetStoredGamesInfo();
 		}
@@ -36,15 +37,32 @@ namespace ExternalSystemGames
 
 			foreach (DirectoryInfo dir in dirs)
 			{
+				// Get description
+				FileInfo[] txts = dir.GetFiles("*.txt");
+				string gameDescription = _DEFAULT_DESCRIPTION;
+				if (txts.Length > 0)
+					gameDescription = ExtractTextFromFile(txts[0]);
+				else 
+                    Debug.LogWarning($".txt Description file missing from {dir.Name}.");
+
+				// Get image
+				FileInfo[] pngs = dir.GetFiles("*.png");
+				FileInfo finalPng = null;
+				foreach(FileInfo i in pngs)
+					finalPng = i;
+				if (finalPng == null)
+                    Debug.LogWarning($".png Image file missing from {dir.Name}.");
+
+				// Get exe
 				FileInfo[] exes = dir.GetFiles("*.exe");
 				FileInfo finalExeInf = null;
 				foreach(FileInfo f in exes)
-				{
 					if (!f.Name.StartsWith("UnityCrashHandler"))
 						finalExeInf = f;
-				}
+				if (finalExeInf == null)
+                    Debug.LogWarning($".exe Executable missing from {dir.Name}.");
 
-				gInf.Add(new GameInfo(dir.Name, dir.FullName, ExtractTextFromFile(dir.GetFiles("*.txt")[0]),finalExeInf, dir.GetFiles("*.png")[0]));
+				gInf.Add(new GameInfo(dir.Name, dir.FullName, gameDescription, finalExeInf, finalPng));
 			}
 
 			return gInf;
@@ -58,7 +76,7 @@ namespace ExternalSystemGames
 		private bool SaveDirExists() =>
 			Directory.Exists(_dirPath);
 
-		private void CreateSaveDir()
+		private void CreateGameDir()
 		{
 			Directory.CreateDirectory(_dirPath);
 		}

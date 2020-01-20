@@ -1,40 +1,44 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using ExternalSystemGames;
 
-namespace ExternalSystemGames
+public class GameButton : MonoBehaviour, ISelectHandler
 {
-    public class GameButton : MonoBehaviour, ISelectHandler
+    private GameInfo _selfGameInfo;
+    private Animator _selectionArrowAnim;
+    private Button _button;
+
+    public Button Button => _button;
+
+    // Start is called before the first frame update
+    void Awake()
     {
-        private GameInfo _selfGameInfo;
-        private Animator _selectionArrowAnim;
-        private Button _button;
+        _selectionArrowAnim = GetComponentInChildren<Animator>();
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(OnGameSelected);
+    }
 
-        // Start is called before the first frame update
-        void Awake()
+    public void SetGameInfo(GameInfo gameInfo)
+    {
+        _selfGameInfo = gameInfo;
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        _selectionArrowAnim.SetTrigger("Idle");
+        GameInfoDisplay.Instance.SetName(_selfGameInfo.Name);
+        GameInfoDisplay.Instance.SetDescription(_selfGameInfo.Description);
+    }
+
+    private void OnGameSelected()
+    {
+        //TODO: Add lil animation before
+        if (_selfGameInfo.ExeFile?.FullName != null)
         {
-            _selectionArrowAnim = GetComponentInChildren<Animator>();
-            _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnGameSelected);
+            ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
+            Debug.LogWarning(_selfGameInfo.Name + " Launched");
         }
 
-        public void SetGameInfo(GameInfo gameInfo)
-        {
-            _selfGameInfo = gameInfo;
-        }
-
-        public void OnSelect(BaseEventData eventData)
-        {
-            _selectionArrowAnim.SetTrigger("Idle");
-            GameInfoDisplay.Instance.SetName(_selfGameInfo.Name);
-            GameInfoDisplay.Instance.SetDescription(_selfGameInfo.Description);
-        }
-
-        private void OnGameSelected()
-        {
-            // add lil animation before
-            if (_selfGameInfo.ExeFile?.FullName != null)
-                ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
-        }
     }
 }

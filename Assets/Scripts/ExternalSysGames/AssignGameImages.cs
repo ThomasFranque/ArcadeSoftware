@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using System.Collections;
-using UnityEngine.UI;
 using UnityEngine;
 
 
@@ -14,7 +12,6 @@ namespace ExternalSystemGames
         [SerializeField] private GameObject _gameButtonPrefab = null;
         [SerializeField] private Transform _contentsTransform = null;
 
-        private EventSystem _eventSystem;
         private ExternalGameManager _EGM;
 
         private MainCanvas _mainCanvas;
@@ -24,7 +21,6 @@ namespace ExternalSystemGames
             Cursor.visible = false;
 
             _EGM = new ExternalGameManager();
-            _eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
             _mainCanvas = GameObject.Find("Main Canvas").GetComponent<MainCanvas>();
             StartCoroutine(LoadButtons(_EGM.GamesInfo));
         }
@@ -61,15 +57,15 @@ namespace ExternalSystemGames
             int dummy = 0;
             foreach (GameInfo g in gInfos)
             {
-                GameObject newButton =
-                    Instantiate(_gameButtonPrefab, _contentsTransform);
-                newButton.GetComponent<RawImage>().texture = textures[dummy];
-                GameButton buttonScript = newButton.GetComponent<GameButton>();
-                buttonScript.SetGameInfo(g);
-                _mainCanvas.AddGameButton(buttonScript);
+                // GameObject newButton =
+                //     Instantiate(_gameButtonPrefab, _contentsTransform);
+                // newButton.GetComponent<RawImage>().texture = textures[dummy];
+                // GameButton buttonScript = newButton.GetComponent<GameButton>();
+                // buttonScript.SetGameInfo(g);
+                // _mainCanvas.AddGameButton(buttonScript);
 
-                if (dummy == 0) _eventSystem.SetSelectedGameObject(newButton);
-
+                // if (dummy == 0) _eventSystem.SetSelectedGameObject(newButton);
+                _mainCanvas.AddGameButton(g, textures[dummy]);
                 dummy++;
             }
 

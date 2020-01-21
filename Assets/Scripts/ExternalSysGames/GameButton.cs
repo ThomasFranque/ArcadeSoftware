@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using ExternalSystemGames;
@@ -6,6 +7,9 @@ using Sounds;
 
 public class GameButton : MonoBehaviour, ISelectHandler
 {
+    private const float _BLINK_TIME = 1.0f;
+    private const float _BLINK_DELAY = .1f;
+
     [SerializeField] private Color _fadedColor = default;
     [SerializeField] private Color _revealedColor = default;
 
@@ -13,6 +17,8 @@ public class GameButton : MonoBehaviour, ISelectHandler
     private Animator _selectionArrowAnim;
     private Button _button;
     private RawImage _img;
+
+    private float _timeOfBlinkStart;
 
     public Button Button => _button;
 
@@ -50,12 +56,33 @@ public class GameButton : MonoBehaviour, ISelectHandler
 
     private void OnGameSelected()
     {
-        //TODO: Add lil animation before
+        //TODO: Add lil image blink before
         _selectionArrowAnim.SetTrigger("Click");
+        AudioMngr.Instance.PlaySound(Sound.Selected);
+
+        Blink();
+
         if (_selfGameInfo.ExeFile?.FullName != null)
         {
             ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
             Debug.LogWarning(_selfGameInfo.Name + " Launched");
         }
+    }
+
+    private void Blink()
+    {
+        _timeOfBlinkStart = Time.time;
+        StopAllCoroutines();
+        StartCoroutine(CBlink());
+    }
+
+    private IEnumerator CBlink()
+    {
+        _img.enabled = !_img.enabled;
+        yield return new WaitForSeconds(_BLINK_DELAY);
+        if (Time.time - _timeOfBlinkStart <_BLINK_TIME)
+            StartCoroutine(CBlink());
+        else
+            _img.enabled = true;
     }
 }

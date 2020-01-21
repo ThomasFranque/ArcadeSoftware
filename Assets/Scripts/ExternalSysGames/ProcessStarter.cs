@@ -11,6 +11,8 @@ namespace ExternalSystemGames
         private const string _RESTART_ARGUMENTS = 
         "/r /t 6 /c \"Restart Shortcut was performed.\nRestarting Machine...\"";
         
+        private static Process _process;
+
         public static void StartGame(string gamePath)
         {
             // Prepare the process to run
@@ -21,17 +23,10 @@ namespace ExternalSystemGames
                 CreateNoWindow = true
             };
 
-            // Run the external process & wait for it to finish
-            //int exitCode;
-            using (Process proc = Process.Start(start))
-            {
-                //proc.WaitForExit();
-
-                // Retrieve the app's exit code
-                //exitCode = proc.ExitCode;
-            }
+            if (_process.HasExited)
+                _process = Process.Start(start);            
         }
-
+    
         public static void ShutDownMachine()
         {
             ProcessStartInfo shutdownInfo = new ProcessStartInfo

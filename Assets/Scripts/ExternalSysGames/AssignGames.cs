@@ -78,7 +78,6 @@ namespace ExternalSystemGames
         private void OnLoadFinished()
         {
             Debug.LogWarning($"Successfully displaying game buttons.");
-
             LoadFinished?.Invoke();
         }
 

@@ -15,5 +15,5 @@ MonoBehaviour:
   _selectionUp: {fileID: 8300000, guid: 5aec0c18f8c897e489e6ed2ad915c5d9, type: 3}
   _selectionDown: {fileID: 8300000, guid: 4a2c1dca21f68dd4eae97101ed1274f9, type: 3}
   _selectionSides: {fileID: 8300000, guid: 050d30b70a60dc84cb207939060e7b6d, type: 3}
-  _selected: {fileID: 0}
+  _selected: {fileID: 8300000, guid: 609c14409cf63ab4989e29b586ddba7c, type: 3}
   _volume: 1

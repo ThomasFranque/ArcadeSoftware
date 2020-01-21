@@ -51,6 +51,7 @@ public class GameButton : MonoBehaviour, ISelectHandler
     private void OnGameSelected()
     {
         //TODO: Add lil animation before
+        _selectionArrowAnim.SetTrigger("Click");
         if (_selfGameInfo.ExeFile?.FullName != null)
         {
             ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);

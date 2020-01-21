@@ -28,4 +28,9 @@ public class RowSurround : MonoBehaviour
         yield return new WaitForSeconds(_BLINK_DURATION);
         _img.color = _normalColor;
     }
+
+    public void ToggleVisibility(bool active)
+    {
+        _img.enabled = active;
+    }
 }

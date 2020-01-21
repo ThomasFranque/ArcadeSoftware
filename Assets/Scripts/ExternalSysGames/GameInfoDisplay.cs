@@ -9,6 +9,7 @@ namespace ExternalSystemGames
         private const float _DELAY_BETWEEN_CHARS = 0.02f;
         private const byte _MAX_NAME_LENGTH = 17;
         private const byte _MAX_DESCRIPTION_LENGTH = 90;
+        private const byte _MAX_DESCRIPTION_CHARS_PER_LINE = 30;
 
         public static GameInfoDisplay Instance { get; private set; }
 
@@ -39,20 +40,37 @@ namespace ExternalSystemGames
 
         private void ClearText()
         {
-            _descriptionTextPro.text = "";
+            _descriptionTextPro.text = "<mspace=0.60em>";
         }
 
         private IEnumerator CSlowDisplay(string textToDisplay)
         {
             int charsWritten = 0;
-            foreach (char c in textToDisplay)
+            byte line = 1;
+
+            string[] words = textToDisplay.Split(' ', '\n');
+
+            foreach (string w in words)
             {
-                if (charsWritten < _MAX_DESCRIPTION_LENGTH)
+                if (charsWritten + w.Length > _MAX_DESCRIPTION_CHARS_PER_LINE * line)
                 {
-                    _descriptionTextPro.text += c;
-                    charsWritten ++;
-                    yield return new WaitForSeconds(_DELAY_BETWEEN_CHARS);
+                    charsWritten = line * _MAX_DESCRIPTION_CHARS_PER_LINE;
+                    _descriptionTextPro.text += '\n';
+                    line++;
                 }
+                foreach (char c in w)
+                {
+                    if (charsWritten < _MAX_DESCRIPTION_LENGTH)
+                    {
+                        _descriptionTextPro.text += c;
+                        charsWritten ++;
+                        if (charsWritten % _MAX_DESCRIPTION_CHARS_PER_LINE == 0)
+                            line++;
+                        yield return new WaitForSeconds(_DELAY_BETWEEN_CHARS);
+                    }
+                }
+                _descriptionTextPro.text += ' ';
+                charsWritten++;
             }
         }
     }

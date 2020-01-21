@@ -10,6 +10,9 @@ public class SystemCanvas : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _sysTimePro;
     [SerializeField] private TextMeshProUGUI _sysDatePro;
 
+    private bool _timeToggle;
+    private char _toggleChar = ':';
+
     private float Seconds => DateTime.Now.Second;
     private float Minutes => DateTime.Now.Minute;
     private float Hours => DateTime.Now.Hour;
@@ -20,10 +23,26 @@ public class SystemCanvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _sysTimePro.text = 
-            $"{Hours.ToString().PadLeft(2,'0')}:" +
-            $"{Minutes.ToString().PadLeft(2,'0')}:"+
+        string newTime = 
+            "<mspace=0.50em>" +
+            $"{Hours.ToString().PadLeft(2,'0')}{_toggleChar}" +
+            $"{Minutes.ToString().PadLeft(2,'0')}{_toggleChar}"+
             $"{Seconds.ToString().PadLeft(2,'0')}";
+
+        if (newTime != _sysTimePro.text)
+        {
+            char oldChar = _toggleChar;
+
+            if (_timeToggle)
+                _toggleChar = ' ';
+            else 
+                _toggleChar = ':';
+
+            newTime = newTime.Replace(oldChar, _toggleChar);
+            _timeToggle = !_timeToggle;
+        }
+
+        _sysTimePro.SetText(newTime);
         _sysDatePro.text = 
             $"{Day.ToString().PadLeft(2,'0')}/" +
             $"{Month.ToString().PadLeft(2,'0')}/"+

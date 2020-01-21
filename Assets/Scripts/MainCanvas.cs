@@ -29,8 +29,11 @@ public class MainCanvas : MonoBehaviour
     private int _rowIndex;
 
     private bool CanChangeLine => Time.time - _timeOfLastRowChange > _DELAY_BETWEEN_LINE_CHANGE;
-    private bool CanRowDown => _rowIndex < _rows.Count - 1 && CanChangeLine;
-    private bool CanRowUp => _rowIndex > 0 && CanChangeLine;
+    private bool CanRowDown => HasRowBelow && CanChangeLine;
+    private bool CanRowUp => HasRowAbove && CanChangeLine;
+
+    private bool HasRowAbove =>  _rowIndex > 0;
+    private bool HasRowBelow => _rowIndex < _rows.Count - 1;
 
     void Awake()
     {
@@ -45,7 +48,8 @@ public class MainCanvas : MonoBehaviour
         _buttonAmount = 0;
         _rowIndex = 0;
 
-        RowsChange = UpdateTimeOfRowChange;
+        RowsChange += UpdateTimeOfRowChange;
+        RowsChange += UpdateRowSurroundVisibility;
     }
 
     // Update is called once per frame
@@ -87,6 +91,7 @@ public class MainCanvas : MonoBehaviour
     public void FinishedButtonLoad()
     {
         _eventSystem.SetSelectedGameObject(_currentRow.MiddleButton);
+        UpdateRowSurroundVisibility();
     }
 
     private void CreateNewRow()
@@ -127,6 +132,12 @@ public class MainCanvas : MonoBehaviour
     private void SetNewSelectedButton(GameObject b)
     {
         _eventSystem.SetSelectedGameObject(b);
+    }
+
+    private void UpdateRowSurroundVisibility()
+    {
+        _rowSurroundBottom.ToggleVisibility(HasRowAbove);
+        _rowSurroundTop.ToggleVisibility(HasRowBelow);
     }
 
     private void UpdateTimeOfRowChange()

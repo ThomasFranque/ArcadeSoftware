@@ -10,8 +10,8 @@ namespace ExternalSystemGames
 
         public static GameInfoDisplay Instance { get; private set; }
 
-        [SerializeField] private TextMeshProUGUI _nameTextPro;
-        [SerializeField] private TextMeshProUGUI _descriptionTextPro;
+        [SerializeField] private TextMeshProUGUI _nameTextPro = null;
+        [SerializeField] private TextMeshProUGUI _descriptionTextPro = null;
 
         // Start is called before the first frame update
         void Awake()

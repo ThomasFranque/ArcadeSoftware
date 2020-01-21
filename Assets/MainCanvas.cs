@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MainCanvas : MonoBehaviour
 {
     //! Beware of constraint count of grid layout on the prefab
-    private const byte _BUTTONS_PER_ROW = 6;
+    private const byte _BUTTONS_PER_ROW = 5;
 
     private List<GamesRow> _rows;
     [SerializeField] private GameObject _gameButtonPrefab = null;

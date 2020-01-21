@@ -7,10 +7,10 @@ namespace ExternalSystemGames
 {
     // Source idea from
     // https://answers.unity.com/questions/25271/how-to-load-images-from-given-folder.html
-    public class AssignGameImages : MonoBehaviour
+    public class AssignGames: MonoBehaviour
     {
-        [SerializeField] private GameObject _gameButtonPrefab = null;
-        [SerializeField] private Transform _contentsTransform = null;
+        //// [SerializeField] private GameObject _gameButtonPrefab = null;
+        //// [SerializeField] private Transform _contentsTransform = null;
 
         private ExternalGameManager _EGM;
 

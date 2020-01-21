@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using ExternalSystemGames;
+using Sounds;
 
 public class GameButton : MonoBehaviour, ISelectHandler
 {
@@ -26,6 +27,7 @@ public class GameButton : MonoBehaviour, ISelectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
+        AudioMngr.Instance.PlaySound(Sound.Selection_Sides);
         _selectionArrowAnim.SetTrigger("Idle");
         GameInfoDisplay.Instance.SetName(_selfGameInfo.Name);
         GameInfoDisplay.Instance.SetDescription(_selfGameInfo.Description);

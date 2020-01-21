@@ -1,41 +1,66 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using ExternalSystemGames;
 using UnityEngine.UI;
+using UnityEngine;
+using System;
+using Sounds;
 
 public class MainCanvas : MonoBehaviour
 {
     //! Beware of constraint count of grid layout on the prefab
     private const byte _BUTTONS_PER_ROW = 5;
+    private const float _DELAY_BETWEEN_LINE_CHANGE = 0.2f;
 
     private List<GamesRow> _rows;
+    [Header("Prefabs")]
     [SerializeField] private GameObject _gameButtonPrefab = null;
     [SerializeField] private GameObject _gamesRowPrefab = null;
+    [Header("References")]
+    [SerializeField] private RowSurround _rowSurroundTop = null;
+    [SerializeField] private RowSurround _rowSurroundBottom = null;
+    private Transform RowsHolderTransform;
     private EventSystem _eventSystem;
 
     private GamesRow _currentRow;
 
+    private float _timeOfLastRowChange;
     private int _buttonAmount;
     private int _rowIndex;
+
+    private bool CanChangeLine => Time.time - _timeOfLastRowChange > _DELAY_BETWEEN_LINE_CHANGE;
+    private bool CanRowDown => _rowIndex < _rows.Count - 1 && CanChangeLine;
+    private bool CanRowUp => _rowIndex > 0 && CanChangeLine;
+
     void Awake()
     {
+        RowsHolderTransform =
+            Instantiate(new GameObject(), transform).transform;
+        RowsHolderTransform.name = "Rows Holder";
+        RowsHolderTransform.SetSiblingIndex(1);
+
         _eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
 
         _rows = new List<GamesRow>();
         _buttonAmount = 0;
         _rowIndex = 0;
+
+        RowsChange = UpdateTimeOfRowChange;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.W) && _rowIndex < _rows.Count - 1)
+        if (Input.GetKey(KeyCode.W) && CanRowDown)
+        {
             AllRowsDown();
-        else if (Input.GetKeyDown(KeyCode.S) && _rowIndex > 0)
+            OnRowChange();
+        }
+        else if (Input.GetKey(KeyCode.S) && CanRowUp)
+        {
             AllRowsUp();
+            OnRowChange();
+        }
     }
 
     public void AddGameButton(GameInfo gInfo, Texture2D texture)
@@ -57,35 +82,39 @@ public class MainCanvas : MonoBehaviour
         buttonScript.SetGameInfo(gInfo);
         // Adding to row
         _currentRow.AddToRow(buttonScript);
+    }
+
+    public void FinishedButtonLoad()
+    {
         _eventSystem.SetSelectedGameObject(_currentRow.MiddleButton);
-
-        //Debug.Log((_buttonAmount-1) % _BUTTONS_PER_ROW);
-
     }
 
     private void CreateNewRow()
     {
-        AllRowsUp();
+        AllRowsUp(false);
         _rowIndex = 0;
-        _currentRow = Instantiate(_gamesRowPrefab, transform).GetComponent<GamesRow>();
+        _currentRow = Instantiate(_gamesRowPrefab, RowsHolderTransform).GetComponent<GamesRow>();
         // Adding to collection
         _rows.Add(_currentRow);
     }
 
-    private void AllRowsUp()
+    private void AllRowsUp(bool playSound = true)
     {   
+        if(playSound) PlayRowChangeSound(Sound.Selection_Down);
+        _rowSurroundBottom.Blink();
         _rowIndex--;
 
         foreach(GamesRow r in _rows)
         {
             r.Up();
             if (r.Index == 0) SetNewSelectedButton(r.MiddleButton);
-        }
-            
+        }            
     }
 
-    private void AllRowsDown()
+    private void AllRowsDown(bool playSound = true)
     {
+        if(playSound) PlayRowChangeSound(Sound.Selection_Up);
+        _rowSurroundTop.Blink();
         _rowIndex++;
 
         foreach(GamesRow r in _rows)
@@ -99,4 +128,22 @@ public class MainCanvas : MonoBehaviour
     {
         _eventSystem.SetSelectedGameObject(b);
     }
+
+    private void UpdateTimeOfRowChange()
+    {
+        _timeOfLastRowChange = Time.time;
+    }
+
+    private void PlayRowChangeSound(Sound s)
+    {
+        AudioMngr.Instance.PlaySound(s);
+    }
+
+    private void OnRowChange()
+    {
+        RowsChange.Invoke();
+    }
+
+    // Pass rows up or down
+    private Action RowsChange;
 }

@@ -6,9 +6,13 @@ using Sounds;
 
 public class GameButton : MonoBehaviour, ISelectHandler
 {
+    [SerializeField] private Color _fadedColor = default;
+    [SerializeField] private Color _revealedColor = default;
+
     private GameInfo _selfGameInfo;
     private Animator _selectionArrowAnim;
     private Button _button;
+    private RawImage _img;
 
     public Button Button => _button;
 
@@ -16,6 +20,7 @@ public class GameButton : MonoBehaviour, ISelectHandler
     void Awake()
     {
         _selectionArrowAnim = GetComponentInChildren<Animator>();
+        _img = GetComponent<RawImage>();
         _button = GetComponent<Button>();
         _button.onClick.AddListener(OnGameSelected);
     }
@@ -27,10 +32,20 @@ public class GameButton : MonoBehaviour, ISelectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        AudioMngr.Instance.PlaySound(Sound.Selection_Sides);
+        AudioMngr.Instance?.PlaySound(Sound.Selection_Sides);
         _selectionArrowAnim.SetTrigger("Idle");
         GameInfoDisplay.Instance.SetName(_selfGameInfo.Name);
         GameInfoDisplay.Instance.SetDescription(_selfGameInfo.Description);
+    }
+
+    public void FadeImage()
+    {
+        _img.color = _fadedColor;
+    }
+
+    public void RevealImage()
+    {
+        _img.color = _revealedColor;
     }
 
     private void OnGameSelected()
@@ -41,6 +56,5 @@ public class GameButton : MonoBehaviour, ISelectHandler
             ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
             Debug.LogWarning(_selfGameInfo.Name + " Launched");
         }
-
     }
 }

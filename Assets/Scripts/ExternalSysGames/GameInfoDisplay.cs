@@ -7,6 +7,8 @@ namespace ExternalSystemGames
     public class GameInfoDisplay : MonoBehaviour
     {
         private const float _DELAY_BETWEEN_CHARS = 0.02f;
+        private const byte _MAX_NAME_LENGTH = 17;
+        private const byte _MAX_DESCRIPTION_LENGTH = 90;
 
         public static GameInfoDisplay Instance { get; private set; }
 
@@ -18,10 +20,13 @@ namespace ExternalSystemGames
         {
             Instance = this;
         }
-        
+
         public void SetName(string name)
         {
-            _nameTextPro.text = name;
+            int finalLength =
+                name.Length > _MAX_NAME_LENGTH ? _MAX_NAME_LENGTH : name.Length;
+
+            _nameTextPro.text = name.Substring(0, finalLength);
         }
 
         public void SetDescription(string text)
@@ -39,10 +44,15 @@ namespace ExternalSystemGames
 
         private IEnumerator CSlowDisplay(string textToDisplay)
         {
+            int charsWritten = 0;
             foreach (char c in textToDisplay)
             {
-                _descriptionTextPro.text += c;
-                yield return new WaitForSeconds(_DELAY_BETWEEN_CHARS);
+                if (charsWritten < _MAX_DESCRIPTION_LENGTH)
+                {
+                    _descriptionTextPro.text += c;
+                    charsWritten ++;
+                    yield return new WaitForSeconds(_DELAY_BETWEEN_CHARS);
+                }
             }
         }
     }

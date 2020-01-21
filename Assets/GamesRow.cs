@@ -83,9 +83,21 @@ public class GamesRow : MonoBehaviour
     private void UpdateInteractableState()
     {
         if (Index == 0)
+        {
+            transform.localScale = new Vector3(1.0f,1.0f,1.0f);
             ToggleButtonInteraction(true);
+            foreach (GameButton b in _buttons)
+                b.RevealImage();
+        }
         else
+        {
+            transform.localScale = new Vector3(0.6f,0.6f,1f);
             ToggleButtonInteraction(false); 
+            foreach (GameButton b in _buttons)
+                b.FadeImage();
+        }
+        
+
     }
 
     public void ToggleButtonInteraction(bool selectable)

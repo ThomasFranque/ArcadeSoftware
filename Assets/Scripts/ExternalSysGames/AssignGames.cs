@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 
@@ -23,6 +24,9 @@ namespace ExternalSystemGames
             _EGM = new ExternalGameManager();
             _mainCanvas = GameObject.Find("Main Canvas").GetComponent<MainCanvas>();
             StartCoroutine(LoadButtons(_EGM.GamesInfo));
+
+            LoadFinished += _mainCanvas.FinishedButtonLoad;
+            LoadFinished += DestroySelf;
         }
 
         private IEnumerator LoadButtons(List<GameInfo> gInfos)
@@ -68,15 +72,21 @@ namespace ExternalSystemGames
                 _mainCanvas.AddGameButton(g, textures[dummy]);
                 dummy++;
             }
+            OnLoadFinished();
+        }
 
-             Debug.LogWarning($"Successfully displaying game buttons.");
+        private void OnLoadFinished()
+        {
+            Debug.LogWarning($"Successfully displaying game buttons.");
 
-            DestroySelf();
+            LoadFinished?.Invoke();
         }
 
         private void DestroySelf()
         {
             Destroy(gameObject);
         }
+
+        private Action LoadFinished;
     }
 }

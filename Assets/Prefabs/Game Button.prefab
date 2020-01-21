@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6367ad7fbb2a174e9f4a4043f638baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fadedColor: {r: 1, g: 1, b: 1, a: 0.50980395}
+  _fadedColor: {r: 1, g: 1, b: 1, a: 0.39215687}
   _revealedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &2153028949131848948
 MonoBehaviour:

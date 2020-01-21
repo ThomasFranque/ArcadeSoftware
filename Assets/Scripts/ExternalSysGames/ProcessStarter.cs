@@ -23,7 +23,7 @@ namespace ExternalSystemGames
                 CreateNoWindow = true
             };
 
-            if (_process.HasExited)
+            if (_process == null || _process.HasExited)
                 _process = Process.Start(start);            
         }
     

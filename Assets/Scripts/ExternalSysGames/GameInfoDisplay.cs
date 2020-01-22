@@ -27,7 +27,7 @@ namespace ExternalSystemGames
             int finalLength =
                 name.Length > _MAX_NAME_LENGTH ? _MAX_NAME_LENGTH : name.Length;
 
-            _nameTextPro.text = name.Substring(0, finalLength);
+            _nameTextPro.SetText(name.Substring(0, finalLength));
         }
 
         public void SetDescription(string text)

@@ -5,51 +5,35 @@ using UnityEngine;
 public class EasterEgg : MonoBehaviour
 {
     [SerializeField] private bool _hasLifetime = false;
-    [ConditionalHide("_hasLifetime", false)]
     [SerializeField] private float _lifetime = 12.0f;
     [Tooltip("Will randomize everything if box is unchecked.")]
     [SerializeField] private bool _customizeValues = true;
 
     #region Move
     [Header("---MOVING---")]
-    [ConditionalHide("_customizeValues", false)]
     [SerializeField] private bool _moveForward = false;
-    [ConditionalHide("_moveForward", false)]
     [SerializeField] private float _moveSpeed = 1.0f;
-    [ConditionalHide("_moveForward", false)]
     [SerializeField] private bool _ignoreRotation = false;
-    [ConditionalHide("_moveForward", false)]
     [SerializeField] private bool _moveOverTime = false;
-    [ConditionalHide("_moveOverTime", false)]
     [SerializeField] private float _increaseMoveSpeed = 1.0f;
     #endregion
 
     #region Rotate
     [Header("---ROTATING---")]
-    [ConditionalHide("_customizeValues", false)]
     [SerializeField] private bool _rotate = false;
-    [ConditionalHide("_rotate", false)]
     [SerializeField] private float _rotateSpeed = 100.0f;
-    [ConditionalHide("_rotate", false)]
     [SerializeField] private bool _rotateLeft = false;
-    [ConditionalHide("_rotate", false)]
     [SerializeField] private bool _rotationOverTime = false;
-    [ConditionalHide("_rotationOverTime", false)]
     [SerializeField] private float _increaseRotationSpeed = 1.0f;
     private Vector3 _rotationDir;
     #endregion
 
     #region Shrink
     [Header("---SHRINKING---")]
-    [ConditionalHide("_customizeValues", false)]
     [SerializeField] private bool _shrink = false;
-    [ConditionalHide("_shrink", false)]
     [SerializeField] private float _shrinkSpeed = .1f;
-    [ConditionalHide("_shrink", false)]
     [SerializeField] private bool _stopAtZero = true;
-    [ConditionalHide("_shrink", false)]
     [SerializeField] private bool _shrinkOverTime = false;
-    [ConditionalHide("_shrinkOverTime", false)]
     [SerializeField] private float _increaseShrinkSpeed = .2f;
     #endregion
 

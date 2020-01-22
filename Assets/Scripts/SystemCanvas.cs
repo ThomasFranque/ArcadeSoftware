@@ -13,6 +13,8 @@ public class SystemCanvas : MonoBehaviour
     private bool _timeToggle;
     private char _toggleChar = ':';
 
+    private float _lastMinuteEasterEgg;
+
     private float Seconds => DateTime.Now.Second;
     private float Minutes => DateTime.Now.Minute;
     private float Hours => DateTime.Now.Hour;
@@ -29,6 +31,7 @@ public class SystemCanvas : MonoBehaviour
             $"{Minutes.ToString().PadLeft(2,'0')}{_toggleChar}"+
             $"{Seconds.ToString().PadLeft(2,'0')}";
 
+        // A second has passed
         if (newTime != _sysTimePro.text)
         {
             char oldChar = _toggleChar;
@@ -40,6 +43,13 @@ public class SystemCanvas : MonoBehaviour
 
             newTime = newTime.Replace(oldChar, _toggleChar);
             _timeToggle = !_timeToggle;
+
+            // 5 Minutes have passed
+            if (Minutes % 5 == 0 && _lastMinuteEasterEgg != Minutes)
+            {
+                _lastMinuteEasterEgg = Minutes;
+                EasterMngr.Instance.SpawnRandomEgg();
+            }
         }
 
         _sysTimePro.SetText(newTime);

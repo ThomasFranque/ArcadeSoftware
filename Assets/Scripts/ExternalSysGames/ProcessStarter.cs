@@ -12,6 +12,7 @@ namespace ExternalSystemGames
         "/r /t 6 /c \"Restart Shortcut was performed.\nRestarting Machine...\"";
         
         private static Process _process;
+        public static bool ProcessActive => !(_process == null || _process.HasExited);
 
         public static void StartGame(string gamePath)
         {
@@ -23,8 +24,11 @@ namespace ExternalSystemGames
                 CreateNoWindow = true
             };
 
-            if (_process == null || _process.HasExited)
-                _process = Process.Start(start);            
+            if (!ProcessActive)
+            {
+                ApplicationMngr.SpawnGameRunningScreen();
+                _process = Process.Start(start);   
+            }
         }
     
         public static void ShutDownMachine()

@@ -14,9 +14,12 @@ namespace ExternalSystemGames
 		private readonly string _dirPath;
 
 		public List<GameInfo> GamesInfo { get; }
+		private LoadingCanvas _loadingCanvas;
 
-		public ExternalGameManager()
+		public ExternalGameManager(LoadingCanvas loadingCanvas)
 		{
+			_loadingCanvas = loadingCanvas;
+
 			_dirPath = Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 				_GAME_DIR_NAME);
@@ -32,6 +35,8 @@ namespace ExternalSystemGames
 		{
 			DirectoryInfo d = new DirectoryInfo(_dirPath);
 			DirectoryInfo[] dirs = d.GetDirectories();
+
+			_loadingCanvas.SetGamesToLoad(dirs.Length);
 
 			List<GameInfo> gInf = new List<GameInfo>();
 
@@ -63,6 +68,7 @@ namespace ExternalSystemGames
                     Debug.LogWarning($".exe Executable missing from {dir.Name}.");
 
 				gInf.Add(new GameInfo(dir.Name, dir.FullName, gameDescription, finalExeInf, finalPng));
+				_loadingCanvas.NewGameFilesLoaded();
 			}
 			
 			gInf.Reverse();

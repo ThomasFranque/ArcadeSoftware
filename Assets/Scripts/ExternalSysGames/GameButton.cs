@@ -65,7 +65,7 @@ public class GameButton : MonoBehaviour, ISelectHandler
         if (_selfGameInfo.ExeFile?.FullName != null)
         {
             ProcessStarter.StartGame(_selfGameInfo.ExeFile.FullName);
-            Debug.LogWarning(_selfGameInfo.Name + " Launched");
+            Debug.LogWarning(_selfGameInfo.Name + " Launch intention");
         }
     }
 

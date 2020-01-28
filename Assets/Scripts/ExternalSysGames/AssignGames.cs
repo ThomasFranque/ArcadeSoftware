@@ -13,24 +13,29 @@ namespace ExternalSystemGames
         //// [SerializeField] private GameObject _gameButtonPrefab = null;
         //// [SerializeField] private Transform _contentsTransform = null;
 
-        private ExternalGameManager _EGM;
+        ////private ExternalGameManager _EGM;
 
         private MainCanvas _mainCanvas;
+        [SerializeField] private LoadingCanvas _loadingCanvas; 
 
         private void Awake()
         {
             Cursor.visible = false;
 
-            _EGM = new ExternalGameManager();
             _mainCanvas = GameObject.Find("Main Canvas").GetComponent<MainCanvas>();
-            StartCoroutine(LoadButtons(_EGM.GamesInfo));
-
             LoadFinished += _mainCanvas.FinishedButtonLoad;
+            LoadFinished += _loadingCanvas.FinishedButtonLoad;
             LoadFinished += DestroySelf;
+
+            ////_EGM = new ExternalGameManager();
+            StartCoroutine(LoadButtons());
         }
 
-        private IEnumerator LoadButtons(List<GameInfo> gInfos)
+        private IEnumerator LoadButtons()
         {
+            ExternalGameManager egm = new ExternalGameManager(_loadingCanvas);
+            List<GameInfo> gInfos = egm.GamesInfo;
+
             // Get images
             Texture2D[] textures = new Texture2D[gInfos.Count];
 
@@ -39,6 +44,7 @@ namespace ExternalSystemGames
             int dummy = 0;
             foreach (GameInfo gi in gInfos)
             {
+                yield return new WaitForSeconds(.5f);
                 if (gi.ImageFile != null)
                 {
                     string pathTemp = pathPreFix + gi.ImageFile.FullName;
@@ -51,6 +57,7 @@ namespace ExternalSystemGames
                 else
                     textures[dummy] = null;
                 dummy++;
+                _loadingCanvas.NewGameImageSet();
             }
             // Instantiate buttons
             PopulateCanvas(gInfos, textures);
@@ -71,6 +78,7 @@ namespace ExternalSystemGames
                 // if (dummy == 0) _eventSystem.SetSelectedGameObject(newButton);
                 _mainCanvas.AddGameButton(g, textures[dummy]);
                 dummy++;
+                _loadingCanvas.NewGameOnCanvas();
             }
             OnLoadFinished();
         }

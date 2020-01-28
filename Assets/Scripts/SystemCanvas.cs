@@ -7,6 +7,8 @@ using TMPro;
 public class SystemCanvas : MonoBehaviour
 {
     // 8,192: The odds, one against, of encountering a shiny Pokémon under normal circumstances in the first 5 generations.
+    private const float _SECS_BETWEEN_DOTS_CHANGE = 0.8192f;
+
     [SerializeField] private TextMeshProUGUI _sysTimePro;
     [SerializeField] private TextMeshProUGUI _sysDatePro;
 
@@ -14,6 +16,7 @@ public class SystemCanvas : MonoBehaviour
     private char _toggleChar = ':';
 
     private float _lastMinuteEasterEgg;
+    private float _timeOfLastTextChange;
 
     private float Seconds => DateTime.Now.Second;
     private float Minutes => DateTime.Now.Minute;
@@ -22,23 +25,29 @@ public class SystemCanvas : MonoBehaviour
     private float Month => DateTime.Now.Month;
     private float Year => DateTime.Now.Year;
 
+    private void Awake()
+    {
+        _timeOfLastTextChange = Time.time;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        string newTime = 
+        string newTime =
             "<mspace=0.50em>" +
-            $"{Hours.ToString().PadLeft(2,'0')}{_toggleChar}" +
-            $"{Minutes.ToString().PadLeft(2,'0')}{_toggleChar}"+
-            $"{Seconds.ToString().PadLeft(2,'0')}";
+            $"{Hours.ToString().PadLeft(2, '0')}{_toggleChar}" +
+            $"{Minutes.ToString().PadLeft(2, '0')}{_toggleChar}" +
+            $"{Seconds.ToString().PadLeft(2, '0')}";
 
         // A second has passed
-        if (newTime != _sysTimePro.text)
+        if (Time.time - _timeOfLastTextChange > _SECS_BETWEEN_DOTS_CHANGE)
         {
+            _timeOfLastTextChange = Time.time;
             char oldChar = _toggleChar;
 
             if (_timeToggle)
                 _toggleChar = ' ';
-            else 
+            else
                 _toggleChar = ':';
 
             newTime = newTime.Replace(oldChar, _toggleChar);
@@ -53,9 +62,5 @@ public class SystemCanvas : MonoBehaviour
         }
 
         _sysTimePro.SetText(newTime);
-        _sysDatePro.text = 
-            $"{Day.ToString().PadLeft(2,'0')}/" +
-            $"{Month.ToString().PadLeft(2,'0')}/"+
-            $"{Year.ToString().PadLeft(2,'0')}";
     }
 }

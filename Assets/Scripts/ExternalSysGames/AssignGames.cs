@@ -8,7 +8,7 @@ namespace ExternalSystemGames
 {
     // Source idea from
     // https://answers.unity.com/questions/25271/how-to-load-images-from-given-folder.html
-    public class AssignGames: MonoBehaviour
+    public class AssignGames : MonoBehaviour
     {
         //// [SerializeField] private GameObject _gameButtonPrefab = null;
         //// [SerializeField] private Transform _contentsTransform = null;
@@ -16,7 +16,7 @@ namespace ExternalSystemGames
         ////private ExternalGameManager _EGM;
 
         private MainCanvas _mainCanvas;
-        [SerializeField] private LoadingCanvas _loadingCanvas; 
+        [SerializeField] private LoadingCanvas _loadingCanvas;
 
         private void Awake()
         {
@@ -28,7 +28,12 @@ namespace ExternalSystemGames
             LoadFinished += DestroySelf;
 
             ////_EGM = new ExternalGameManager();
+        }
+
+        private void Start()
+        {
             StartCoroutine(LoadButtons());
+
         }
 
         private IEnumerator LoadButtons()

@@ -36,7 +36,9 @@ public static class RandomTexts
             "Wubba lubba dub dub",
             "Will you take the left red joystick or the right red joystick?",
             "Gubba nub nub doo rah kah.",
-            "Inside me is a tiny dwarf live-coding everything you see. Hi!"
+            "Inside me is a tiny dwarf live-coding everything you see. Hi!",
+            "Honk.",
+            "Hippity hoppity!"
         };
 
     public static string RandomLoadingScreenText => 

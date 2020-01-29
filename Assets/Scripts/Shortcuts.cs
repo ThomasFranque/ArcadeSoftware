@@ -11,6 +11,7 @@ namespace ArcadeFunctionality
 
         [SerializeField] KeyCode[] _shutdownSequence = null;
         [SerializeField] KeyCode[] _restartSequence = null;
+        [SerializeField] KeyCode[] _changeThemeKeys = null;
 
         float _timePressingShutdown = 0;
         float _timePressingRestart = 0;
@@ -38,6 +39,11 @@ namespace ArcadeFunctionality
                     Shutdown();
                 }
 
+                if (PressingDownAllInInstant(_changeThemeKeys))
+                {
+                    ChangeTheme();
+                }
+
                 else if (_timePressingRestart >= _SHORTCUT_DELAY)
                 {
                     OnShortcutTaken();
@@ -53,6 +59,18 @@ namespace ArcadeFunctionality
                 if (!Input.GetKey(k))
                     return false;
             return true;
+        }
+        private bool PressingDownAllInInstant(KeyCode[] sequence)
+        {
+            foreach (KeyCode k in sequence)
+                if (!Input.GetKeyDown(k))
+                    return false;
+            return true;
+        }
+
+        private void ChangeTheme()
+        {
+            ThemeChanger.Instance?.ChangeTheme();
         }
 
         private void OnShortcutTaken()
